@@ -3,110 +3,91 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Generador Imperio v4.0</title>
+    <title>WA Imperio Final</title>
     <style>
-        :root {
-            --bg: #0b141a;
-            --header: #1f2c34;
-            --bubble-in: #1f2c34;
-            --bubble-out: #005c4b;
-            --text: #e9edef;
-            --meta: #8696a0;
-            --green: #00a884;
-        }
-
-        * { box-sizing: border-box; }
-        body, html { margin: 0; padding: 0; background: #000; height: 100%; font-family: sans-serif; }
-
-        /* Panel de Control */
-        #panel { background: #121212; padding: 20px; border-bottom: 2px solid #333; display: block; }
-        label { display: block; font-size: 11px; color: var(--green); margin-top: 10px; font-weight: bold; }
-        input, textarea, select { width: 100%; padding: 12px; background: #222; border: 1px solid #444; color: #fff; border-radius: 8px; margin-top: 5px; }
-        .btn-gen { background: var(--green); color: white; border: none; padding: 15px; width: 100%; border-radius: 30px; font-weight: bold; margin-top: 20px; font-size: 16px; }
-
-        /* App Pantalla Completa */
-        #app { display: none; width: 100vw; height: 100vh; background: var(--bg); background-image: url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png'); background-size: 450px; flex-direction: column; }
+        :root { --bg: #0b141a; --header: #1f2c34; --in: #1f2c34; --out: #382061; --text: #e9edef; --meta: #8696a0; --green: #00a884; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { background: #000; color: white; font-family: sans-serif; height: 100vh; overflow: hidden; }
         
-        .header { background: var(--header); padding: 40px 15px 10px; display: flex; align-items: center; gap: 10px; }
+        #panel { padding: 20px; background: #121212; height: 100%; overflow-y: auto; }
+        label { display: block; font-size: 11px; color: var(--green); margin-top: 15px; font-weight: bold; }
+        input, textarea { width: 100%; padding: 12px; background: #222; border: 1px solid #444; color: #fff; border-radius: 8px; margin-top: 5px; font-size: 16px; }
+        .btn-gen { background: var(--green); color: white; border: none; padding: 18px; width: 100%; border-radius: 30px; font-weight: bold; margin-top: 25px; font-size: 18px; }
+
+        #app { display: none; width: 100vw; height: 100vh; background: var(--bg); flex-direction: column; position: relative; }
+        #app::before { content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-image: url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png'); background-size: 400px; opacity: 0.06; }
+        
+        .header { background: var(--header); padding: 40px 15px 10px; display: flex; align-items: center; gap: 10px; z-index: 2; }
         .avatar { width: 40px; height: 40px; border-radius: 50%; background: #333; object-fit: cover; }
-        .info { flex: 1; color: white; }
+        .info { flex: 1; }
         .name { font-weight: bold; font-size: 16px; display: block; }
         .status { font-size: 11px; color: var(--meta); }
 
-        .chat { flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; }
-        .date { align-self: center; background: #182229; color: var(--meta); font-size: 11px; padding: 5px 12px; border-radius: 8px; margin: 10px 0; }
+        .chat { flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; z-index: 2; }
+        .msg { max-width: 85%; padding: 8px 12px; border-radius: 8px; margin-bottom: 6px; font-size: 15px; line-height: 1.4; position: relative; }
+        .out { align-self: flex-end; background: var(--out); color: var(--text); border-top-right-radius: 0; }
+        .in { align-self: flex-start; background: var(--in); color: var(--text); border-top-left-radius: 0; }
         
-        .msg { max-width: 85%; padding: 8px 12px; border-radius: 8px; margin-bottom: 4px; font-size: 15px; color: var(--text); position: relative; line-height: 1.4; }
-        .in { align-self: flex-start; background: var(--bubble-in); border-top-left-radius: 0; }
-        .out { align-self: flex-end; background: var(--bubble-out); border-top-right-radius: 0; }
-        
-        .msg-meta { font-size: 10px; color: rgba(255,255,255,0.5); text-align: right; margin-top: 4px; display: flex; justify-content: flex-end; gap: 3px; }
-
-        .footer { background: var(--bg); padding: 10px; display: flex; gap: 8px; align-items: center; }
-        .input-box { background: var(--header); flex: 1; border-radius: 25px; padding: 10px 15px; color: var(--meta); font-size: 16px; display: flex; justify-content: space-between; }
-        .mic { background: var(--green); width: 45px; height: 45px; border-radius: 50%; display: flex; justify-content: center; align-items: center; color: white; }
+        .time { font-size: 10px; color: rgba(255,255,255,0.5); text-align: right; margin-top: 4px; display: flex; justify-content: flex-end; gap: 3px; }
+        .footer { background: var(--bg); padding: 10px; display: flex; gap: 8px; align-items: center; z-index: 2; }
+        .input-sim { background: var(--header); flex: 1; border-radius: 25px; padding: 10px 15px; color: var(--meta); display: flex; justify-content: space-between; }
+        .mic { background: var(--green); width: 45px; height: 45px; border-radius: 50%; display: flex; justify-content: center; align-items: center; }
     </style>
 </head>
 <body>
-
     <div id="panel">
-        <label>NOMBRE CONTACTO</label>
-        <input type="text" id="nameIn" value="Nans">
-        <label>FOTO DE PERFIL (GALERÍA)</label>
-        <input type="file" id="photoIn" accept="image/*">
+        <label>NOMBRE</label>
+        <input type="text" id="nIn" value="Nans">
+        <label>FOTO (GALERÍA)</label>
+        <input type="file" id="pIn" accept="image/*">
         <label>HORA INICIAL</label>
-        <input type="time" id="timeIn" value="22:30">
-        <label>MENSAJES (UNO POR LÍNEA)</label>
-        <textarea id="textIn" rows="6"></textarea>
-        <button class="btn-gen" onclick="render()">GENERAR PANTALLA COMPLETA</button>
+        <input type="time" id="tIn" value="22:30">
+        <label>MENSAJES (PEGA AQUÍ EL TEXTO)</label>
+        <textarea id="mIn" rows="10"></textarea>
+        <button class="btn-gen" onclick="r()">GENERAR AHORA</button>
     </div>
 
     <div id="app">
         <div class="header">
-            <span>←</span>
-            <img id="avatar" class="avatar" src="">
-            <div class="info">
-                <span class="name" id="nameDisp"></span>
-                <span class="status">en línea</span>
-            </div>
-            <div style="display:flex; gap:15px; color:#8696a0">📹 📞 ⋮</div>
+            <span onclick="location.reload()">←</span>
+            <img id="av" class="avatar" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7">
+            <div class="info"><span class="name" id="nD"></span><span class="status">en línea</span></div>
+            <div style="color:#8696a0; display:flex; gap:15px">📹 📞 ⋮</div>
         </div>
-        <div class="chat" id="chat"></div>
+        <div class="chat" id="cB"></div>
         <div class="footer">
-            <div class="input-box"><span>😊 Mensaje</span><span>📎 📷</span></div>
+            <div class="input-sim"><span>😊 Mensaje</span><span>📎 📷</span></div>
             <div class="mic">🎤</div>
         </div>
     </div>
 
     <script>
-        function render() {
+        function r() {
+            const txt = document.getElementById('mIn').value;
+            if(!txt) return;
+            const pI = document.getElementById('pIn');
+            if (pI.files && pI.files[0]) {
+                const fr = new FileReader();
+                fr.onload = function(e) { document.getElementById('av').src = e.target.result; };
+                fr.readAsDataURL(pI.files[0]);
+            }
             document.getElementById('panel').style.display = 'none';
             document.getElementById('app').style.display = 'flex';
-            
-            const name = document.getElementById('nameIn').value;
-            const lines = document.getElementById('textIn').value.split('\n').filter(l => l.trim());
-            const [hBase, mBase] = document.getElementById('timeIn').value.split(':').map(Number);
-            
-            document.getElementById('nameDisp').innerText = name;
-            const photo = document.getElementById('photoIn').files[0];
-            if(photo) document.getElementById('avatar').src = URL.createObjectURL(photo);
+            document.getElementById('nD').innerText = document.getElementById('nIn').value;
 
-            const chat = document.getElementById('chat');
-            chat.innerHTML = '<div class="date">Hoy</div>';
+            const box = document.getElementById('cB');
+            box.innerHTML = '<div style="align-self:center; background:#182229; color:#8696a0; font-size:11px; padding:5px 12px; border-radius:8px; margin:10px 0;">HOY</div>';
+            
+            const lines = txt.split('\n').filter(l => l.trim());
+            let [h, m] = document.getElementById('tIn').value.split(':').map(Number);
 
-            let h = hBase, m = mBase;
-            lines.forEach((t, i) => {
-                if(i > 0) {
-                    m += Math.floor(Math.random() * 8);
-                    if(m >= 60) { m -= 60; h = (h % 12) + 1; }
-                }
-                const side = i % 2 === 0 ? 'out' : 'in';
-                const checks = side === 'out' ? '<span style="color:#53bdeb">✓✓</span>' : '';
-                chat.innerHTML += `
-                    <div class="msg ${side}">
-                        ${t}
-                        <div class="msg-meta">${h}:${m.toString().padStart(2,'0')} ${checks}</div>
-                    </div>`;
+            lines.forEach((l, i) => {
+                if(i > 0) m += Math.floor(Math.random() * 5) + 1;
+                if(m >= 60) { m -= 60; h = (h % 12) + 1; }
+                const s = i % 2 === 0 ? 'out' : 'in';
+                const ts = h + ":" + m.toString().padStart(2, '0');
+                const ck = s === 'out' ? '<span style="color:#53bdeb; font-weight:bold;">✓✓</span>' : '';
+                box.innerHTML += `<div class="msg ${s}">${l}<div class="time">${ts} ${ck}</div></div>`;
             });
         }
     </script>
