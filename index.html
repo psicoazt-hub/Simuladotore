@@ -7,43 +7,117 @@
         :root {
             --bg-dark: #0b141a;
             --header-bg: #1f2c34;
-            --bubble-in: #1f2c34;
-            --bubble-out: #382061;
+            --wa-green: #00a884;
             --text-main: #e9edef;
             --text-meta: #8696a0;
-            --wa-green: #00a884;
         }
-        body { margin: 0; background: #121212; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: white; display: flex; flex-direction: column; align-items: center; }
+        body { margin: 0; background: #121212; font-family: 'Segoe UI', Roboto, Helvetica, sans-serif; display: flex; flex-direction: column; align-items: center; }
         
-        /* PANEL DE ENTRADA */
-        #panel { width: 100%; max-width: 400px; padding: 20px; box-sizing: border-box; }
-        input, textarea { width: 100%; padding: 12px; background: #222; border: 1px solid #444; color: #fff; border-radius: 8px; margin-bottom: 10px; box-sizing: border-box; }
-        .btn-gen { background: var(--wa-green); color: white; border: none; padding: 15px; width: 100%; border-radius: 30px; font-weight: bold; cursor: pointer; font-size: 16px; }
+        /* PANEL DE ENTRADA (CONTROL) */
+        #panel { width: 100%; max-width: 400px; padding: 20px; color: white; box-sizing: border-box; }
+        .input-group { margin-bottom: 15px; text-align: left; }
+        label { display: block; margin-bottom: 5px; font-size: 14px; color: var(--wa-green); font-weight: bold;}
+        input { width: 100%; padding: 12px; background: #222; border: 1px solid #444; color: #fff; border-radius: 8px; box-sizing: border-box; }
+        .btn-gen { background: var(--wa-green); color: white; border: none; padding: 15px; width: 100%; border-radius: 30px; font-weight: bold; cursor: pointer; font-size: 16px; margin-top: 10px; }
 
-        /* CONTENEDOR DEL TELÉFONO */
-        #phone-wrapper { display: none; width: 375px; height: 750px; background: #000; border: 12px solid #1f1f1f; border-radius: 40px; position: relative; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.5); margin: 20px 0; }
+        /* MARCO DEL TELÉFONO REALISTA */
+        #phone-wrapper { display: none; width: 375px; height: 780px; background: #000; border: 12px solid #1f1f1f; border-radius: 45px; position: relative; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.8); margin: 20px 0; }
         
-        #app { width: 100%; height: 100%; background-color: var(--bg-dark); background-image: url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png'); background-size: 400px; background-repeat: repeat; display: flex; flex-direction: column; }
+        #app { width: 100%; height: 100%; background-color: var(--bg-dark); display: flex; flex-direction: column; }
         
-        /* HEADER REALISTA */
-        .header { background: var(--header-bg); padding: 45px 12px 10px 10px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; }
-        .h-left { display: flex; align-items: center; gap: 8px; }
-        .avatar { width: 38px; height: 38px; border-radius: 50%; background: #333; object-fit: cover; }
-        .h-info { display: flex; flex-direction: column; }
+        /* HEADER (CON ESTILO DE TU APP) */
+        .header { background: var(--header-bg); padding: 45px 12px 12px 10px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; }
+        .h-left { display: flex; align-items: center; gap: 10px; }
+        .avatar { width: 38px; height: 38px; border-radius: 50%; object-fit: cover; background: #333; }
         .h-info b { font-size: 16px; color: var(--text-main); }
-        .h-icons { display: flex; gap: 18px; color: #b1b9be; font-size: 18px; padding-right: 5px; }
+        .h-icons { display: flex; gap: 20px; color: #b1b9be; font-size: 18px; }
 
-        /* CHAT */
-        .chat { flex: 1; padding: 10px 12px; overflow-y: auto; display: flex; flex-direction: column; gap: 4px; }
-        .date-badge { align-self: center; background: #182229; color: #8696a0; font-size: 12px; padding: 5px 12px; border-radius: 8px; margin: 10px 0; text-transform: uppercase; }
-        
-        .bubble { max-width: 85%; padding: 6px 10px 8px 10px; border-radius: 8px; font-size: 14.5px; color: var(--text-main); line-height: 1.4; position: relative; box-shadow: 0 1px 0.5px rgba(0,0,0,0.13); }
-        .in { align-self: flex-start; background: var(--bubble-in); border-top-left-radius: 0; }
-        .out { align-self: flex-end; background: var(--bubble-out); border-top-right-radius: 0; }
-        .meta { font-size: 11px; color: rgba(233, 237, 239, 0.6); text-align: right; margin-top: 2px; display: flex; justify-content: flex-end; gap: 3px; align-items: center; }
+        /* EL CUERPO DEL CHAT ES LA CAPTURA SUBIDA */
+        .chat-capture-area { flex: 1; overflow: hidden; background: #000; display: flex; align-items: flex-start; justify-content: center; }
+        #chat-image { width: 100%; height: auto; }
 
-        /* BARRA INFERIOR */
-        .footer { padding: 10px; display: flex; align-items: center; gap: 6px; background: transparent; padding-bottom: 20px; }
-        .input-bar { background: var(--header-bg); flex: 1; border-radius: 25px; padding: 10px 15px; display: flex; align-items: center; justify-content: space-between; color: #8696a0; }
-        .mic { background: var(--wa-green); width: 45px; height: 45px; border-radius:
+        /* BARRA INFERIOR (FOOTER) */
+        .footer { padding: 10px; display: flex; align-items: center; gap: 8px; padding-bottom: 25px; background: #0b141a; }
+        .input-bar { background: var(--header-bg); flex: 1; border-radius: 25px; padding: 10px 15px; display: flex; justify-content: space-between; color: var(--text-meta); font-size: 16px; }
+        .mic { background: var(--wa-green); width: 45px; height: 45px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 20px; }
+    </style>
+</head>
+<body>
+
+    <div id="panel">
+        <h2 style="text-align:center; color:var(--wa-green)">WhatsApp Simulator (App Custom)</h2>
+        <div class="input-group">
+            <label>Nombre del Contacto:</label>
+            <input type="text" id="n" value="Nans">
+        </div>
+        <div class="input-group">
+            <label>Foto de Perfil (Contacto):</label>
+            <input type="file" id="f_avatar" accept="image/*">
+        </div>
+        <div class="input-group">
+            <label>Subir la Captura del Chat (con errores):</label>
+            <input type="file" id="f_chat" accept="image/*">
+        </div>
+        <button class="btn-gen" onclick="render()">GENERAR VISTA INTEGRADA</button>
+    </div>
+
+    <div id="phone-wrapper">
+        <div id="app">
+            <div class="header" onclick="regresar()">
+                <div class="h-left">
+                    <span style="color:#00a884; font-size: 20px;">←</span>
+                    <img id="av_top" class="avatar" src="">
+                    <div class="h-info"><b id="nd"></b></div>
+                </div>
+                <div class="h-icons">📹 📞 ⋮</div>
+            </div>
             
+            <div class="chat-capture-area">
+                <img id="chat-image" src="">
+            </div>
+
+            <div class="footer">
+                <div class="input-bar"><span>😊 Mensaje</span><span>📎 📷</span></div>
+                <div class="mic">🎤</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function render() {
+            const avatarInput = document.getElementById('f_avatar');
+            const chatInput = document.getElementById('f_chat');
+            const name = document.getElementById('n').value;
+
+            // 1. Procesar Foto de Perfil
+            if (avatarInput.files && avatarInput.files[0]) {
+                const readerAv = new FileReader();
+                readerAv.onload = (e) => document.getElementById('av_top').src = e.target.result;
+                readerAv.readAsDataURL(avatarInput.files[0]);
+            }
+
+            // 2. Procesar Imagen de la Captura
+            if (chatInput.files && chatInput.files[0]) {
+                const readerChat = new FileReader();
+                readerChat.onload = (e) => {
+                    // Colocamos la captura completa como el contenido del chat
+                    document.getElementById('chat-image').src = e.target.result;
+                    
+                    // Actualizamos nombre y mostramos el teléfono
+                    document.getElementById('nd').innerText = name;
+                    document.getElementById('panel').style.display = 'none';
+                    document.getElementById('phone-wrapper').style.display = 'block';
+                };
+                readerChat.readAsDataURL(chatInput.files[0]);
+            } else {
+                alert("Por favor, selecciona la imagen de la captura con errores que quieres mostrar.");
+            }
+        }
+
+        function regresar() {
+            document.getElementById('panel').style.display = 'block';
+            document.getElementById('phone-wrapper').style.display = 'none';
+        }
+    </script>
+</body>
+</html>
