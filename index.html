@@ -3,103 +3,102 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WhatsApp Imperio v2.0</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Generador WA Imperio v3.0</title>
+    <style>
+        :root {
+            --wa-bg: #0b141a;
+            --wa-header: #1f2c34;
+            --wa-in: #1f2c34;
+            --wa-out: #382061; /* Morado Imperio */
+            --wa-text: #e9edef;
+            --wa-meta: #8696a0;
+            --wa-green: #00a884;
+        }
+
+        body { background: #121212; font-family: 'Segoe UI', sans-serif; color: white; margin: 0; padding: 15px; display: flex; flex-direction: column; align-items: center; }
+        
+        /* Panel de Control Estilo Taller */
+        #controls { background: #1e1e1e; padding: 20px; border-radius: 12px; width: 100%; max-width: 400px; border: 1px solid #333; margin-bottom: 25px; }
+        h2 { margin: 0 0 15px 0; color: var(--wa-green); font-size: 18px; text-transform: uppercase; }
+        label { display: block; font-size: 12px; color: #aaa; margin: 10px 0 5px; }
+        input, select, textarea { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #444; background: #2a2a2a; color: white; box-sizing: border-box; font-size: 14px; }
+        .row { display: flex; gap: 10px; align-items: center; }
+        
+        /* Interfaz WhatsApp Realista */
+        .phone { width: 360px; height: 740px; background: var(--wa-bg); background-image: url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png'); background-size: cover; border-radius: 35px; border: 8px solid #222; overflow: hidden; display: flex; flex-direction: column; position: relative; box-shadow: 0 20px 50px rgba(0,0,0,0.5); margin-bottom: 40px; }
+        .header { background: var(--wa-header); padding: 35px 15px 10px; display: flex; align-items: center; gap: 10px; }
+        .avatar { width: 38px; height: 38px; border-radius: 50%; background: #333; object-fit: cover; }
+        .contact-info { flex: 1; }
+        .name { font-weight: bold; font-size: 15px; display: block; }
+        .status { font-size: 11px; color: var(--wa-meta); }
+        
+        .chat { flex: 1; padding: 15px; display: flex; flex-direction: column; overflow-y: auto; }
+        .date-label { align-self: center; background: #182229; color: var(--wa-meta); padding: 5px 12px; border-radius: 8px; font-size: 11px; margin: 12px 0; text-transform: uppercase; }
+        .encrypt { align-self: center; background: #182229; color: #ffd279; padding: 8px; border-radius: 8px; font-size: 11px; text-align: center; line-height: 1.4; margin-bottom: 15px; }
+        
+        .msg { max-width: 80%; padding: 8px 12px; border-radius: 10px; margin-bottom: 5px; font-size: 14.5px; position: relative; line-height: 1.4; }
+        .sent { align-self: flex-end; background: var(--wa-out); border-top-right-radius: 0; }
+        .received { align-self: flex-start; background: var(--wa-in); border-top-left-radius: 0; }
+        .time-meta { font-size: 10px; color: var(--wa-meta); text-align: right; margin-top: 4px; display: flex; justify-content: flex-end; gap: 4px; }
+        
+        button { width: 100%; padding: 15px; background: var(--wa-green); color: white; border: none; border-radius: 10px; font-weight: bold; font-size: 16px; cursor: pointer; margin-top: 15px; }
+    </style>
 </head>
 <body>
 
-<div class="main-wrapper">
     <div id="controls">
-        <h2>🛠 Configuración Realista</h2>
+        <h2>🛠 Configuración</h2>
+        <input type="text" id="nameIn" placeholder="Nombre (ej. Luij)" value="Luij">
+        <label>Foto de contacto (Galería):</label>
+        <input type="file" id="photoIn" accept="image/*">
         
-        <div class="field-group">
-            <h3>👤 Perfil del Contacto</h3>
-            <div class="field">
-                <label>Nombre del Contacto:</label>
-                <input type="text" id="nameIn" value="Luij" placeholder="Nombre (ej. Luij, Amor...)">
-            </div>
-            <div class="field">
-                <label>URL de Foto de Perfil:</label>
-                <input type="text" id="photoIn" placeholder="Pega el link de la imagen aquí...">
-            </div>
-        </div>
-
-        <div class="field-group">
-            <h3>🎭 Tono y Estado</h3>
-            <div class="field">
-                <label>Estado del contacto:</label>
-                <input type="text" id="statusIn" value="en línea">
-            </div>
-            <label>Tono de respuestas:</label>
-            <select id="toneIn">
-                <option value="normal">Normal</option>
-                <option value="serio">Serio</option>
-                <option value="amoroso">Amoroso ❤️</option>
-                <option value="enojado">Enojado/Reclamo 😠</option>
-                <option value="indiferente">Indiferente...</option>
+        <label>Hora inicial:</label>
+        <div class="row">
+            <input type="time" id="timeIn" value="20:00">
+            <select id="dateIn">
+                <option value="Hoy">Hoy</option>
+                <option value="Ayer">Ayer</option>
+                <option value="Fecha">22 de febrero de 2026</option>
             </select>
         </div>
 
-        <div class="field-group">
-            <h3>⏰ Fecha y Hora Inicial</h3>
-            <div class="field row">
-                <input type="number" id="hourIn" value="8" min="1" max="12"> : 
-                <input type="number" id="minuteIn" value="00" min="0" max="59">
-                <select id="ampmIn"><option>p. m.</option><option>a. m.</option></select>
-            </div>
-            <select id="dateTypeIn" onchange="toggleSpecificDate()">
-                <option value="hoy">Hoy</option>
-                <option value="ayer">Ayer</option>
-                <option value="especifica">Fecha Específica</option>
-            </select>
-            <input type="date" id="specificDateIn" style="display:none; margin-top:10px;">
-        </div>
+        <label>Tono de conversación:</label>
+        <select id="toneIn">
+            <option value="normal">Normal</option>
+            <option value="amoroso">Amoroso ❤️</option>
+            <option value="reclamo">Reclamo 😠</option>
+            <option value="indiferente">Indiferente...</option>
+        </select>
 
-        <div class="field-group">
-            <h3>💬 Chat (Enter para separar burbujas)</h3>
-            <textarea id="textIn" placeholder="Te amo&#10;Yo más&#10;Porque?&#10;Porque te amo"></textarea>
-            <div class="field row">
-                <input type="checkbox" id="startWithMe" checked>
-                <label for="startWithMe">Iniciar conmigo (Derecha)</label>
-            </div>
-            <div class="field row">
-                <input type="checkbox" id="encryptionIn" checked>
-                <label for="encryptionIn">Incluir aviso de cifrado</label>
-            </div>
+        <label>Mensajes (Enter para separar burbujas):</label>
+        <textarea id="textIn" placeholder="Te amo&#10;Yo más&#10;Porque?"></textarea>
+        
+        <div class="row" style="margin-top:10px;">
+            <input type="checkbox" id="startMe" checked> <label>Iniciar conmigo (Derecha)</label>
         </div>
-
-        <button onclick="renderAllImages()" class="btn-generate">GENERAR IMÁGENES</button>
+        
+        <button onclick="generar()">GENERAR CHAT</button>
     </div>
 
-    <div id="output-gallery" class="output-gallery">
-        </div>
-</div>
+    <div id="resultado"></div>
 
-<div id="phone-template" style="display:none;">
-    <div class="phone-frame">
-        <div class="status-bar">
-            <span>9:41</span>
-            <div>📶 🔋</div>
-        </div>
-        <div class="wa-header">
-            <div class="header-left">
-                <span>←</span>
-                <img src="" class="avatar-display">
-                <div class="contact-meta">
-                    <span class="name-display"></span>
-                    <span class="status-display"></span>
-                </div>
-            </div>
-            <div class="header-right">📹 📞 ⋮</div>
-        </div>
-        <div class="chat-area"></div>
-        <div class="wa-footer">
-            <div class="input-sim">😊 Mensaje 📎 📷</div>
-            <div class="mic-circle">🎤</div>
-        </div>
-    </div>
-</div>
+    <script>
+        function generar() {
+            const res = document.getElementById('resultado');
+            res.innerHTML = '';
+            const lines = document.getElementById('textIn').value.split('\n').filter(l => l.trim());
+            const photoFile = document.getElementById('photoIn').files[0];
+            const pURL = photoFile ? URL.createObjectURL(photoFile) : "https://via.placeholder.com/40";
+            const tone = document.getElementById('toneIn').value;
+            const startMe = document.getElementById('startMe').checked;
 
-<script src="script.js"></script>
-</body>
-</html>
+            let [h, m] = document.getElementById('timeIn').value.split(':').map(Number);
+            
+            const phone = document.createElement('div');
+            phone.className = 'phone';
+            phone.innerHTML = `
+                <div class="header">
+                    <img src="${pURL}" class="avatar">
+                    <div class="contact-info">
+
+                        
