@@ -2,95 +2,124 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>WhatsApp Realista - Modo Oscuro</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WhatsApp Imperio - Classic Compact</title>
     <style>
         :root {
-            --bg-dark: #0b141a;
-            --header-bg: #1f2c34;
-            --bubble-in: #1f2c34;
-            --bubble-out: #005c4b; /* Verde oficial WhatsApp Oscuro */
-            --text-main: #e9edef;
-            --text-meta: #8696a0;
+            --wa-bg: #0b141a;
+            --wa-header: #1f2c34;
+            --wa-bubble-in: #1f2c34;
+            --wa-bubble-out: #382061; /* Tu morado característico */
+            --wa-text: #e9edef;
+            --wa-meta: #8696a0;
             --wa-green: #00a884;
-            --input-bg: #2a3942;
-            --icon-color: #8696a0;
         }
 
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body, html { margin: 0; padding: 0; background: #000; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; height: 100%; overflow: hidden; }
-
-        /* Panel de configuración (se oculta al generar) */
-        #panel-control { background: #121212; padding: 20px; border-bottom: 2px solid #333; position: absolute; z-index: 10; width: 100%; max-height: 100%; overflow-y: auto; }
-        .input-group { margin-bottom: 15px; }
-        label { display: block; font-size: 12px; color: var(--wa-green); margin-bottom: 5px; text-transform: uppercase; font-weight: bold; }
-        input, textarea { width: 100%; padding: 12px; background: #222; border: 1px solid #444; color: #fff; border-radius: 8px; font-size: 14px; }
-        .btn-main { background: var(--wa-green); color: white; border: none; padding: 15px; width: 100%; border-radius: 30px; font-weight: bold; margin-top: 10px; font-size: 16px; cursor: pointer; }
-
-        /* Contenedor Principal (Simulador) */
-        #app-container { display: none; width: 100vw; height: 100vh; background-color: var(--bg-dark); background-image: url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png'); background-size: contain; position: relative; flex-direction: column; }
-
-        /* --- HEADER REALISTA CON ICONOS --- */
-        .header { background: var(--header-bg); padding: 35px 12px 10px 10px; display: flex; align-items: center; justify-content: space-between; color: white; border-bottom: 1px solid rgba(0,0,0,0.1); }
-        .header-left { display: flex; align-items: center; gap: 8px; flex: 1; overflow: hidden; }
-        .avatar { width: 38px; height: 38px; border-radius: 50%; background: #333; object-fit: cover; }
-        .user-info { display: flex; flex-direction: column; overflow: hidden; }
-        .user-name { font-weight: bold; font-size: 16px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
-        .status { font-size: 11px; color: var(--text-meta); }
+        body { background: #121212; font-family: 'Segoe UI', Roboto, sans-serif; color: white; margin: 0; padding: 10px; display: flex; flex-direction: column; align-items: center; }
         
-        .header-icons { display: flex; gap: 22px; align-items: center; padding-right: 5px; }
+        /* Panel de Control */
+        #controls { background: #1e1e1e; padding: 15px; border-radius: 12px; width: 100%; max-width: 360px; border: 1px solid #333; margin-bottom: 20px; box-sizing: border-box; }
+        input, textarea, select { width: 100%; padding: 10px; margin: 5px 0; border-radius: 8px; border: 1px solid #444; background: #2a2a2a; color: white; font-size: 14px; }
+        .btn-gen { width: 100%; padding: 12px; background: var(--wa-green); color: white; border: none; border-radius: 25px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+
+        /* EL SIMULADOR COMPACTO */
+        #simulator-frame { display: none; border: 4px solid #333; border-radius: 25px; overflow: hidden; box-shadow: 0 15px 40px rgba(0,0,0,0.6); }
+        .phone-body { width: 340px; height: 620px; background: var(--wa-bg); background-image: url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png'); background-size: cover; display: flex; flex-direction: column; position: relative; }
+
+        /* Header con iconos reales */
+        .header { background: var(--wa-header); padding: 35px 12px 10px 10px; display: flex; align-items: center; justify-content: space-between; }
+        .header-left { display: flex; align-items: center; gap: 8px; }
+        .back-arrow { color: var(--wa-meta); font-size: 18px; margin-right: 2px; }
+        .avatar { width: 36px; height: 36px; border-radius: 50%; background: #444; object-fit: cover; }
+        .contact-name { font-weight: bold; font-size: 15px; color: white; }
+        .header-icons { display: flex; gap: 18px; color: var(--wa-meta); font-size: 16px; padding-right: 5px; }
+
+        /* Chat */
+        .chat-area { flex: 1; padding: 10px 15px; overflow-y: auto; display: flex; flex-direction: column; }
+        .date-label { align-self: center; background: #182229; color: var(--wa-meta); padding: 4px 10px; border-radius: 6px; font-size: 11px; margin: 10px 0; }
         
-        /* Iconos SVG precisos */
-        .icon-svg { width: 20px; height: 20px; fill: var(--icon-color); cursor: pointer; }
-        .back-icon { width: 24px; height: 24px; fill: var(--icon-color); cursor: pointer; }
-
-        /* --- ÁREA DE CHAT --- */
-        .chat-view { flex: 1; padding: 10px 14px; overflow-y: auto; display: flex; flex-direction: column; gap: 4px; padding-bottom: 15px; }
-        .date-pill { align-self: center; background: #182229; color: var(--text-meta); font-size: 11.5px; padding: 5px 12px; border-radius: 7px; margin: 8px 0; text-transform: uppercase; }
-
         /* Burbujas */
-        .bubble { max-width: 85%; padding: 6px 9px 8px 12px; font-size: 15px; color: var(--text-main); position: relative; line-height: 1.4; box-shadow: 0 1px 0.5px rgba(0,0,0,0.13); }
-        .in { align-self: flex-start; background: var(--bubble-in); border-radius: 0 8px 8px 8px; }
-        .out { align-self: flex-end; background: var(--bubble-out); border-radius: 8px 0 8px 8px; }
-        
-        .msg-meta { display: flex; align-items: center; justify-content: flex-end; gap: 3px; font-size: 10px; color: rgba(233, 237, 239, 0.6); margin-top: -2px; float: right; margin-left: 8px; position: relative; bottom: -4px; }
-        .check-blue { color: #53bdeb; font-size: 13px; font-weight: bold; }
+        .msg { max-width: 82%; padding: 7px 10px 8px 12px; border-radius: 10px; margin-bottom: 5px; font-size: 14.5px; color: var(--wa-text); position: relative; line-height: 1.4; }
+        .sent { align-self: flex-end; background: var(--wa-bubble-out); border-top-right-radius: 0; }
+        .received { align-self: flex-start; background: var(--wa-bubble-in); border-top-left-radius: 0; }
+        .msg-time { font-size: 10px; color: rgba(255,255,255,0.5); text-align: right; margin-top: 4px; display: flex; justify-content: flex-end; gap: 3px; }
 
-        /* --- BARRA INFERIOR (INPUT) CON ICONOS --- */
-        .footer { background: transparent; padding: 8px 10px 12px 10px; display: flex; align-items: center; gap: 8px; width: 100%; position: absolute; bottom: 0; left: 0; z-index: 5; }
-        .input-bar { background: var(--header-bg); flex: 1; border-radius: 25px; padding: 8px 15px; display: flex; align-items: center; gap: 12px; color: var(--text-meta); font-size: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.3); }
-        .mic-btn { background: var(--wa-green); width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.3); flex-shrink: 0; }
-        
-        .icon-emoji { font-size: 22px; cursor: pointer; }
-        .icon-placeholder { flex: 1; color: rgba(134, 150, 160, 0.7); }
-        
-        /* Botón Flotante para Volver */
-        #btn-volver { position: fixed; top: 10px; right: 10px; background: rgba(0,0,0,0.7); border: 1px solid var(--wa-green); color: white; padding: 5px 12px; border-radius: 20px; z-index: 100; font-size: 11px; display: none; cursor: pointer; text-transform: uppercase; font-weight: bold;}
+        /* BARRA INFERIOR COMPLETA */
+        .footer { padding: 8px 10px 12px 10px; display: flex; align-items: center; gap: 8px; }
+        .input-sim { background: var(--wa-header); flex: 1; border-radius: 22px; padding: 9px 15px; color: var(--wa-meta); display: flex; justify-content: space-between; align-items: center; font-size: 15px; }
+        .mic-btn { background: var(--wa-green); width: 42px; height: 42px; border-radius: 50%; display: flex; justify-content: center; align-items: center; color: white; font-size: 18px; }
     </style>
 </head>
 <body>
 
-    <div id="panel-control">
-        <label>Nombre del Contacto</label>
-        <input type="text" id="nameIn" value="Amor" placeholder="Ej. Luij">
-        
-        <label>Foto de Perfil (Galería)</label>
+    <div id="controls">
+        <input type="text" id="nameIn" value="Nans" placeholder="Nombre">
+        <label style="font-size: 11px; color: #888;">Foto Perfil:</label>
         <input type="file" id="photoIn" accept="image/*">
-
-        <label>Mensajes (Un mensaje por línea)</label>
-        <textarea id="textIn" rows="6">Hola cariño&#10;¿Cómo estás?&#10;Te extraño mucho</textarea>
-
-        <label>Hora Inicial (Formato 24h)</label>
-        <input type="time" id="timeIn" value="20:00">
-
-        <button class="btn-main" onclick="construirChat()">GENERAR CAPTURA REALISTA</button>
+        <input type="time" id="timeIn" value="22:30">
+        <textarea id="textIn" rows="5" placeholder="Pega los mensajes aquí..."></textarea>
+        <button class="btn-gen" onclick="generar()">GENERAR SIMULADOR</button>
     </div>
 
-    <button id="btn-volver" onclick="location.reload()">Editar</button>
+    <div id="simulator-frame">
+        <div class="phone-body">
+            <div class="header">
+                <div class="header-left">
+                    <span class="back-arrow">←</span>
+                    <img id="av-img" class="avatar" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=">
+                    <span id="name-disp" class="contact-name">Nombre</span>
+                </div>
+                <div class="header-icons">📹 📞 ⋮</div>
+            </div>
+            
+            <div class="chat-area" id="chat-box">
+                <div class="date-label">Hoy</div>
+            </div>
 
-    <div id="app-container">
-        <div class="header">
-            <div class="header-left">
-                <svg class="back-icon" viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"></path></svg>
-                <img id="avatar-img" class="avatar" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII
-                    
+            <div class="footer">
+                <div class="input-sim">
+                    <span>😊 Mensaje</span>
+                    <span style="font-size: 13px;">📎 📷</span>
+                </div>
+                <div class="mic-btn">🎤</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function generar() {
+            const lines = document.getElementById('textIn').value.split('\n').filter(l => l.trim());
+            const photo = document.getElementById('photoIn').files[0];
+            let [h, m] = document.getElementById('timeIn').value.split(':').map(Number);
+
+            document.getElementById('name-disp').innerText = document.getElementById('nameIn').value;
+            
+            if(photo) {
+                const reader = new FileReader();
+                reader.onload = (e) => { document.getElementById('av-img').src = e.target.result; };
+                reader.readAsDataURL(photo);
+            }
+
+            const chat = document.getElementById('chat-box');
+            chat.innerHTML = '<div class="date-label">Hoy</div>';
+
+            lines.forEach((t, i) => {
+                if(i > 0) m += Math.floor(Math.random() * 6) + 1;
+                if(m >= 60) { m -= 60; h = (h % 12) + 1; }
+                
+                const timeStr = `${h}:${m.toString().padStart(2, '0')}`;
+                const side = i % 2 === 0 ? 'sent' : 'received';
+                const checks = side === 'sent' ? '<span style="color:#53bdeb">✓✓</span>' : '';
+
+                chat.innerHTML += `
+                    <div class="msg ${side}">
+                        ${t}
+                        <div class="msg-time">${timeStr} ${checks}</div>
+                    </div>`;
+            });
+
+            document.getElementById('simulator-frame').style.display = 'block';
+        }
+    </script>
+</body>
+</html>
