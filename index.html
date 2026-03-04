@@ -3,102 +3,66 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Generador WA Imperio v3.0</title>
+    <title>Generador WhatsApp Imperio</title>
     <style>
-        :root {
-            --wa-bg: #0b141a;
-            --wa-header: #1f2c34;
-            --wa-in: #1f2c34;
-            --wa-out: #382061; /* Morado Imperio */
-            --wa-text: #e9edef;
-            --wa-meta: #8696a0;
-            --wa-green: #00a884;
-        }
-
-        body { background: #121212; font-family: 'Segoe UI', sans-serif; color: white; margin: 0; padding: 15px; display: flex; flex-direction: column; align-items: center; }
+        :root { --wa-bg: #0b141a; --wa-header: #1f2c34; --wa-in: #1f2c34; --wa-out: #382061; --wa-text: #e9edef; --wa-meta: #8696a0; --wa-green: #00a884; }
+        body { background: #121212; font-family: sans-serif; color: white; display: flex; flex-direction: column; align-items: center; padding: 10px; margin: 0; }
+        #controls { background: #1e1e1e; padding: 15px; border-radius: 12px; width: 100%; max-width: 380px; border: 1px solid #333; margin-bottom: 20px; box-sizing: border-box; }
+        input, select, textarea { width: 100%; padding: 10px; margin: 8px 0; border-radius: 6px; border: 1px solid #444; background: #2a2a2a; color: white; box-sizing: border-box; }
+        .row { display: flex; gap: 8px; align-items: center; }
+        button { width: 100%; padding: 15px; background: var(--wa-green); color: white; border: none; border-radius: 10px; font-weight: bold; font-size: 16px; cursor: pointer; }
         
-        /* Panel de Control Estilo Taller */
-        #controls { background: #1e1e1e; padding: 20px; border-radius: 12px; width: 100%; max-width: 400px; border: 1px solid #333; margin-bottom: 25px; }
-        h2 { margin: 0 0 15px 0; color: var(--wa-green); font-size: 18px; text-transform: uppercase; }
-        label { display: block; font-size: 12px; color: #aaa; margin: 10px 0 5px; }
-        input, select, textarea { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #444; background: #2a2a2a; color: white; box-sizing: border-box; font-size: 14px; }
-        .row { display: flex; gap: 10px; align-items: center; }
-        
-        /* Interfaz WhatsApp Realista */
-        .phone { width: 360px; height: 740px; background: var(--wa-bg); background-image: url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png'); background-size: cover; border-radius: 35px; border: 8px solid #222; overflow: hidden; display: flex; flex-direction: column; position: relative; box-shadow: 0 20px 50px rgba(0,0,0,0.5); margin-bottom: 40px; }
+        .phone { width: 360px; height: 720px; background: var(--wa-bg); background-image: url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png'); background-size: cover; border-radius: 30px; border: 8px solid #222; overflow: hidden; display: flex; flex-direction: column; position: relative; margin-top: 10px; }
         .header { background: var(--wa-header); padding: 35px 15px 10px; display: flex; align-items: center; gap: 10px; }
         .avatar { width: 38px; height: 38px; border-radius: 50%; background: #333; object-fit: cover; }
         .contact-info { flex: 1; }
         .name { font-weight: bold; font-size: 15px; display: block; }
         .status { font-size: 11px; color: var(--wa-meta); }
-        
         .chat { flex: 1; padding: 15px; display: flex; flex-direction: column; overflow-y: auto; }
-        .date-label { align-self: center; background: #182229; color: var(--wa-meta); padding: 5px 12px; border-radius: 8px; font-size: 11px; margin: 12px 0; text-transform: uppercase; }
-        .encrypt { align-self: center; background: #182229; color: #ffd279; padding: 8px; border-radius: 8px; font-size: 11px; text-align: center; line-height: 1.4; margin-bottom: 15px; }
-        
-        .msg { max-width: 80%; padding: 8px 12px; border-radius: 10px; margin-bottom: 5px; font-size: 14.5px; position: relative; line-height: 1.4; }
+        .date-label { align-self: center; background: #182229; color: var(--wa-meta); padding: 5px 12px; border-radius: 8px; font-size: 11px; margin: 10px 0; }
+        .msg { max-width: 80%; padding: 8px 12px; border-radius: 10px; margin-bottom: 5px; font-size: 14.5px; position: relative; line-height: 1.4; box-shadow: 0 1px 1px rgba(0,0,0,0.2); }
         .sent { align-self: flex-end; background: var(--wa-out); border-top-right-radius: 0; }
         .received { align-self: flex-start; background: var(--wa-in); border-top-left-radius: 0; }
         .time-meta { font-size: 10px; color: var(--wa-meta); text-align: right; margin-top: 4px; display: flex; justify-content: flex-end; gap: 4px; }
-        
-        button { width: 100%; padding: 15px; background: var(--wa-green); color: white; border: none; border-radius: 10px; font-weight: bold; font-size: 16px; cursor: pointer; margin-top: 15px; }
+        .check { color: #53bdeb; font-weight: bold; }
     </style>
 </head>
 <body>
-
     <div id="controls">
-        <h2>🛠 Configuración</h2>
-        <input type="text" id="nameIn" placeholder="Nombre (ej. Luij)" value="Luij">
-        <label>Foto de contacto (Galería):</label>
+        <input type="text" id="nameIn" placeholder="Nombre contacto" value="Luij">
+        <label style="font-size:11px;">Foto de Galería:</label>
         <input type="file" id="photoIn" accept="image/*">
-        
-        <label>Hora inicial:</label>
         <div class="row">
             <input type="time" id="timeIn" value="20:00">
-            <select id="dateIn">
-                <option value="Hoy">Hoy</option>
-                <option value="Ayer">Ayer</option>
-                <option value="Fecha">22 de febrero de 2026</option>
-            </select>
+            <select id="dateIn"><option>Hoy</option><option>Ayer</option><option>24 de febrero</option></select>
         </div>
-
-        <label>Tono de conversación:</label>
-        <select id="toneIn">
-            <option value="normal">Normal</option>
-            <option value="amoroso">Amoroso ❤️</option>
-            <option value="reclamo">Reclamo 😠</option>
-            <option value="indiferente">Indiferente...</option>
-        </select>
-
-        <label>Mensajes (Enter para separar burbujas):</label>
-        <textarea id="textIn" placeholder="Te amo&#10;Yo más&#10;Porque?"></textarea>
-        
-        <div class="row" style="margin-top:10px;">
-            <input type="checkbox" id="startMe" checked> <label>Iniciar conmigo (Derecha)</label>
-        </div>
-        
-        <button onclick="generar()">GENERAR CHAT</button>
+        <textarea id="textIn" placeholder="Escribe aquí... (Enter para nueva burbuja)"></textarea>
+        <button onclick="render()">GENERAR</button>
     </div>
-
-    <div id="resultado"></div>
+    <div id="res"></div>
 
     <script>
-        function generar() {
-            const res = document.getElementById('resultado');
-            res.innerHTML = '';
+        function render() {
+            const out = document.getElementById('res');
+            out.innerHTML = '';
             const lines = document.getElementById('textIn').value.split('\n').filter(l => l.trim());
-            const photoFile = document.getElementById('photoIn').files[0];
-            const pURL = photoFile ? URL.createObjectURL(photoFile) : "https://via.placeholder.com/40";
-            const tone = document.getElementById('toneIn').value;
-            const startMe = document.getElementById('startMe').checked;
-
+            const photo = document.getElementById('photoIn').files[0];
+            const pURL = photo ? URL.createObjectURL(photo) : "https://via.placeholder.com/40";
             let [h, m] = document.getElementById('timeIn').value.split(':').map(Number);
             
             const phone = document.createElement('div');
             phone.className = 'phone';
-            phone.innerHTML = `
-                <div class="header">
-                    <img src="${pURL}" class="avatar">
-                    <div class="contact-info">
+            phone.innerHTML = `<div class="header"><img src="${pURL}" class="avatar"><div class="contact-info"><span class="name">${document.getElementById('nameIn').value}</span><span class="status">en línea</span></div></div><div class="chat"><div class="date-label">${document.getElementById('dateIn').value}</div></div>`;
+            const chat = phone.querySelector('.chat');
 
-                        
+            lines.forEach((t, i) => {
+                if(i > 0) m += Math.floor(Math.random() * 8) + 1;
+                if(m >= 60) { m -= 60; h = (h % 12) + 1; }
+                const type = i % 2 === 0 ? 'sent' : 'received';
+                chat.innerHTML += `<div class="msg ${type}">${t}<div class="time-meta">${h}:${m.toString().padStart(2,'0')} ${type==='sent'?'<span class="check">✓✓</span>':''}</div></div>`;
+            });
+            out.appendChild(phone);
+        }
+    </script>
+</body>
+</html>
