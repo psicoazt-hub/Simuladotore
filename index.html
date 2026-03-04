@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WhatsApp Imperio v2.0</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="main-wrapper">
+    <div id="controls">
+        <h2>🛠 Configuración Realista</h2>
+        
+        <div class="field-group">
+            <h3>👤 Perfil del Contacto</h3>
+            <div class="field">
+                <label>Nombre del Contacto:</label>
+                <input type="text" id="nameIn" value="Luij" placeholder="Nombre (ej. Luij, Amor...)">
+            </div>
+            <div class="field">
+                <label>URL de Foto de Perfil:</label>
+                <input type="text" id="photoIn" placeholder="Pega el link de la imagen aquí...">
+            </div>
+        </div>
+
+        <div class="field-group">
+            <h3>🎭 Tono y Estado</h3>
+            <div class="field">
+                <label>Estado del contacto:</label>
+                <input type="text" id="statusIn" value="en línea">
+            </div>
+            <label>Tono de respuestas:</label>
+            <select id="toneIn">
+                <option value="normal">Normal</option>
+                <option value="serio">Serio</option>
+                <option value="amoroso">Amoroso ❤️</option>
+                <option value="enojado">Enojado/Reclamo 😠</option>
+                <option value="indiferente">Indiferente...</option>
+            </select>
+        </div>
+
+        <div class="field-group">
+            <h3>⏰ Fecha y Hora Inicial</h3>
+            <div class="field row">
+                <input type="number" id="hourIn" value="8" min="1" max="12"> : 
+                <input type="number" id="minuteIn" value="00" min="0" max="59">
+                <select id="ampmIn"><option>p. m.</option><option>a. m.</option></select>
+            </div>
+            <select id="dateTypeIn" onchange="toggleSpecificDate()">
+                <option value="hoy">Hoy</option>
+                <option value="ayer">Ayer</option>
+                <option value="especifica">Fecha Específica</option>
+            </select>
+            <input type="date" id="specificDateIn" style="display:none; margin-top:10px;">
+        </div>
+
+        <div class="field-group">
+            <h3>💬 Chat (Enter para separar burbujas)</h3>
+            <textarea id="textIn" placeholder="Te amo&#10;Yo más&#10;Porque?&#10;Porque te amo"></textarea>
+            <div class="field row">
+                <input type="checkbox" id="startWithMe" checked>
+                <label for="startWithMe">Iniciar conmigo (Derecha)</label>
+            </div>
+            <div class="field row">
+                <input type="checkbox" id="encryptionIn" checked>
+                <label for="encryptionIn">Incluir aviso de cifrado</label>
+            </div>
+        </div>
+
+        <button onclick="renderAllImages()" class="btn-generate">GENERAR IMÁGENES</button>
+    </div>
+
+    <div id="output-gallery" class="output-gallery">
+        </div>
+</div>
+
+<div id="phone-template" style="display:none;">
+    <div class="phone-frame">
+        <div class="status-bar">
+            <span>9:41</span>
+            <div>📶 🔋</div>
+        </div>
+        <div class="wa-header">
+            <div class="header-left">
+                <span>←</span>
+                <img src="" class="avatar-display">
+                <div class="contact-meta">
+                    <span class="name-display"></span>
+                    <span class="status-display"></span>
+                </div>
+            </div>
+            <div class="header-right">📹 📞 ⋮</div>
+        </div>
+        <div class="chat-area"></div>
+        <div class="wa-footer">
+            <div class="input-sim">😊 Mensaje 📎 📷</div>
+            <div class="mic-circle">🎤</div>
+        </div>
+    </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
