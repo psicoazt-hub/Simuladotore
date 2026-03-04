@@ -2,67 +2,77 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Generador WhatsApp Imperio</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>WhatsApp Business Dark - Full Screen</title>
     <style>
-        :root { --wa-bg: #0b141a; --wa-header: #1f2c34; --wa-in: #1f2c34; --wa-out: #382061; --wa-text: #e9edef; --wa-meta: #8696a0; --wa-green: #00a884; }
-        body { background: #121212; font-family: sans-serif; color: white; display: flex; flex-direction: column; align-items: center; padding: 10px; margin: 0; }
-        #controls { background: #1e1e1e; padding: 15px; border-radius: 12px; width: 100%; max-width: 380px; border: 1px solid #333; margin-bottom: 20px; box-sizing: border-box; }
-        input, select, textarea { width: 100%; padding: 10px; margin: 8px 0; border-radius: 6px; border: 1px solid #444; background: #2a2a2a; color: white; box-sizing: border-box; }
-        .row { display: flex; gap: 8px; align-items: center; }
-        button { width: 100%; padding: 15px; background: var(--wa-green); color: white; border: none; border-radius: 10px; font-weight: bold; font-size: 16px; cursor: pointer; }
+        :root {
+            --bg-dark: #0b141a;
+            --header-bg: #1f2c34;
+            --bubble-in: #1f2c34;
+            --bubble-out: #005c4b; /* Verde oficial WhatsApp Oscuro */
+            --text-main: #e9edef;
+            --text-meta: #8696a0;
+            --wa-green: #00a884;
+            --input-bg: #2a3942;
+        }
+
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body, html { margin: 0; padding: 0; background: #000; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; height: 100%; overflow-x: hidden; }
+
+        /* Panel de configuración (se oculta al generar) */
+        #panel-control { background: #121212; padding: 20px; border-bottom: 2px solid #333; }
+        .input-group { margin-bottom: 15px; }
+        label { display: block; font-size: 12px; color: var(--wa-green); margin-bottom: 5px; text-transform: uppercase; font-weight: bold; }
+        input, textarea, select { width: 100%; padding: 12px; background: #222; border: 1px solid #444; color: #fff; border-radius: 8px; font-size: 14px; }
+        .btn-main { background: var(--wa-green); color: white; border: none; padding: 15px; width: 100%; border-radius: 30px; font-weight: bold; margin-top: 10px; font-size: 16px; }
+
+        /* Contenedor Principal (Tamaño Real App) */
+        #app-container { display: none; width: 100vw; height: 100vh; background-color: var(--bg-dark); background-image: url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png'); background-size: 400px; position: relative; flex-direction: column; }
+
+        /* Header Realista */
+        .header { background: var(--header-bg); padding: 35px 12px 10px 10px; display: flex; align-items: center; gap: 8px; color: white; }
+        .back-arrow { font-size: 20px; margin-right: 2px; }
+        .avatar { width: 40px; height: 40px; border-radius: 50%; background: #333; object-fit: cover; }
+        .user-name { flex: 1; font-weight: 500; font-size: 16px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+        .icons { display: flex; gap: 20px; font-size: 18px; margin-right: 5px; }
+
+        /* Área de Chat */
+        .chat-view { flex: 1; padding: 10px 12px; overflow-y: auto; display: flex; flex-direction: column; gap: 4px; }
+        .date-pill { align-self: center; background: #182229; color: var(--text-meta); font-size: 11.5px; padding: 5px 12px; border-radius: 7px; margin: 8px 0; text-transform: uppercase; }
+
+        /* Burbujas */
+        .bubble { max-width: 85%; padding: 6px 9px 8px 12px; font-size: 15px; color: var(--text-main); position: relative; line-height: 1.4; box-shadow: 0 1px 0.5px rgba(0,0,0,0.13); }
+        .in { align-self: flex-start; background: var(--bubble-in); border-radius: 0 8px 8px 8px; }
+        .out { align-self: flex-end; background: var(--bubble-out); border-radius: 8px 0 8px 8px; }
         
-        .phone { width: 360px; height: 720px; background: var(--wa-bg); background-image: url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png'); background-size: cover; border-radius: 30px; border: 8px solid #222; overflow: hidden; display: flex; flex-direction: column; position: relative; margin-top: 10px; }
-        .header { background: var(--wa-header); padding: 35px 15px 10px; display: flex; align-items: center; gap: 10px; }
-        .avatar { width: 38px; height: 38px; border-radius: 50%; background: #333; object-fit: cover; }
-        .contact-info { flex: 1; }
-        .name { font-weight: bold; font-size: 15px; display: block; }
-        .status { font-size: 11px; color: var(--wa-meta); }
-        .chat { flex: 1; padding: 15px; display: flex; flex-direction: column; overflow-y: auto; }
-        .date-label { align-self: center; background: #182229; color: var(--wa-meta); padding: 5px 12px; border-radius: 8px; font-size: 11px; margin: 10px 0; }
-        .msg { max-width: 80%; padding: 8px 12px; border-radius: 10px; margin-bottom: 5px; font-size: 14.5px; position: relative; line-height: 1.4; box-shadow: 0 1px 1px rgba(0,0,0,0.2); }
-        .sent { align-self: flex-end; background: var(--wa-out); border-top-right-radius: 0; }
-        .received { align-self: flex-start; background: var(--wa-in); border-top-left-radius: 0; }
-        .time-meta { font-size: 10px; color: var(--wa-meta); text-align: right; margin-top: 4px; display: flex; justify-content: flex-end; gap: 4px; }
-        .check { color: #53bdeb; font-weight: bold; }
+        .msg-info { display: flex; align-items: center; justify-content: flex-end; gap: 3px; font-size: 10px; color: rgba(233, 237, 239, 0.6); margin-top: -2px; float: right; margin-left: 8px; position: relative; bottom: -4px; }
+        .check-blue { color: #53bdeb; font-size: 13px; font-weight: bold; }
+
+        /* Barra Inferior (Input) */
+        .footer { background: transparent; padding: 5px 8px 10px 8px; display: flex; align-items: flex-end; gap: 5px; }
+        .input-bar { background: var(--header-bg); flex: 1; border-radius: 25px; padding: 10px 15px; display: flex; align-items: center; gap: 10px; color: var(--text-meta); font-size: 16px; }
+        .mic-btn { background: var(--wa-green); width: 45px; height: 45px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 20px; }
+
+        /* Botón Flotante para Volver */
+        #btn-volver { position: fixed; top: 10px; right: 10px; background: rgba(0,0,0,0.5); border: 1px solid white; color: white; padding: 5px 10px; border-radius: 5px; z-index: 100; font-size: 10px; display: none; }
     </style>
 </head>
 <body>
-    <div id="controls">
-        <input type="text" id="nameIn" placeholder="Nombre contacto" value="Luij">
-        <label style="font-size:11px;">Foto de Galería:</label>
+
+    <button id="btn-volver" onclick="location.reload()">EDITAR</button>
+
+    <div id="panel-control">
+        <label>Nombre del Contacto</label>
+        <input type="text" id="nameIn" value="Amor">
+        
+        <label>Foto de Perfil (Selecciona de Galería)</label>
         <input type="file" id="photoIn" accept="image/*">
-        <div class="row">
-            <input type="time" id="timeIn" value="20:00">
-            <select id="dateIn"><option>Hoy</option><option>Ayer</option><option>24 de febrero</option></select>
-        </div>
-        <textarea id="textIn" placeholder="Escribe aquí... (Enter para nueva burbuja)"></textarea>
-        <button onclick="render()">GENERAR</button>
-    </div>
-    <div id="res"></div>
 
-    <script>
-        function render() {
-            const out = document.getElementById('res');
-            out.innerHTML = '';
-            const lines = document.getElementById('textIn').value.split('\n').filter(l => l.trim());
-            const photo = document.getElementById('photoIn').files[0];
-            const pURL = photo ? URL.createObjectURL(photo) : "https://via.placeholder.com/40";
-            let [h, m] = document.getElementById('timeIn').value.split(':').map(Number);
-            
-            const phone = document.createElement('div');
-            phone.className = 'phone';
-            phone.innerHTML = `<div class="header"><img src="${pURL}" class="avatar"><div class="contact-info"><span class="name">${document.getElementById('nameIn').value}</span><span class="status">en línea</span></div></div><div class="chat"><div class="date-label">${document.getElementById('dateIn').value}</div></div>`;
-            const chat = phone.querySelector('.chat');
+        <label>Mensajes (Cada Enter es una burbuja nueva)</label>
+        <textarea id="textIn" rows="4">Te amo&#10;Yo más&#10;¿Porque?&#10;Porque te amo</textarea>
 
-            lines.forEach((t, i) => {
-                if(i > 0) m += Math.floor(Math.random() * 8) + 1;
-                if(m >= 60) { m -= 60; h = (h % 12) + 1; }
-                const type = i % 2 === 0 ? 'sent' : 'received';
-                chat.innerHTML += `<div class="msg ${type}">${t}<div class="time-meta">${h}:${m.toString().padStart(2,'0')} ${type==='sent'?'<span class="check">✓✓</span>':''}</div></div>`;
-            });
-            out.appendChild(phone);
-        }
-    </script>
-</body>
-</html>
+        <label>Hora de Inicio</label>
+        <input type="time" id="timeIn" value="21:30">
+
+        <button class="btn-main" onclick="construirChat()">GENERAR A PANTALLA COMPLETA</button>
+        
