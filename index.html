@@ -2,123 +2,113 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WhatsApp Imperio - Classic Compact</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <style>
         :root {
-            --wa-bg: #0b141a;
-            --wa-header: #1f2c34;
-            --wa-bubble-in: #1f2c34;
-            --wa-bubble-out: #382061; /* Tu morado característico */
-            --wa-text: #e9edef;
-            --wa-meta: #8696a0;
+            --bg-dark: #0b141a;
+            --header-bg: #1f2c34;
+            --bubble-in: #1f2c34;
+            --bubble-out: #382061;
+            --text-main: #e9edef;
+            --text-meta: #8696a0;
             --wa-green: #00a884;
         }
-
-        body { background: #121212; font-family: 'Segoe UI', Roboto, sans-serif; color: white; margin: 0; padding: 10px; display: flex; flex-direction: column; align-items: center; }
+        body, html { margin: 0; padding: 0; background: #000; font-family: sans-serif; height: 100%; overflow: hidden; }
         
-        /* Panel de Control */
-        #controls { background: #1e1e1e; padding: 15px; border-radius: 12px; width: 100%; max-width: 360px; border: 1px solid #333; margin-bottom: 20px; box-sizing: border-box; }
-        input, textarea, select { width: 100%; padding: 10px; margin: 5px 0; border-radius: 8px; border: 1px solid #444; background: #2a2a2a; color: white; font-size: 14px; }
-        .btn-gen { width: 100%; padding: 12px; background: var(--wa-green); color: white; border: none; border-radius: 25px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        /* PANEL DE CONTROL */
+        #panel { background: #121212; padding: 20px; border-bottom: 2px solid #333; position: absolute; z-index: 10; width: 100%; box-sizing: border-box; }
+        input, textarea { width: 100%; padding: 12px; background: #222; border: 1px solid #444; color: #fff; border-radius: 8px; margin-bottom: 10px; box-sizing: border-box; }
+        .btn-gen { background: var(--wa-green); color: white; border: none; padding: 15px; width: 100%; border-radius: 30px; font-weight: bold; cursor: pointer; }
 
-        /* EL SIMULADOR COMPACTO */
-        #simulator-frame { display: none; border: 4px solid #333; border-radius: 25px; overflow: hidden; box-shadow: 0 15px 40px rgba(0,0,0,0.6); }
-        .phone-body { width: 340px; height: 620px; background: var(--wa-bg); background-image: url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png'); background-size: cover; display: flex; flex-direction: column; position: relative; }
-
-        /* Header con iconos reales */
-        .header { background: var(--wa-header); padding: 35px 12px 10px 10px; display: flex; align-items: center; justify-content: space-between; }
-        .header-left { display: flex; align-items: center; gap: 8px; }
-        .back-arrow { color: var(--wa-meta); font-size: 18px; margin-right: 2px; }
-        .avatar { width: 36px; height: 36px; border-radius: 50%; background: #444; object-fit: cover; }
-        .contact-name { font-weight: bold; font-size: 15px; color: white; }
-        .header-icons { display: flex; gap: 18px; color: var(--wa-meta); font-size: 16px; padding-right: 5px; }
-
-        /* Chat */
-        .chat-area { flex: 1; padding: 10px 15px; overflow-y: auto; display: flex; flex-direction: column; }
-        .date-label { align-self: center; background: #182229; color: var(--wa-meta); padding: 4px 10px; border-radius: 6px; font-size: 11px; margin: 10px 0; }
+        /* SIMULADOR */
+        #app { 
+            display: none; 
+            width: 100vw; 
+            height: 100vh; 
+            background-color: var(--bg-dark); 
+            background-image: url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png'); 
+            background-size: 450px; 
+            background-repeat: repeat;
+            flex-direction: column; 
+            position: relative; 
+        }
         
-        /* Burbujas */
-        .msg { max-width: 82%; padding: 7px 10px 8px 12px; border-radius: 10px; margin-bottom: 5px; font-size: 14.5px; color: var(--wa-text); position: relative; line-height: 1.4; }
-        .sent { align-self: flex-end; background: var(--wa-bubble-out); border-top-right-radius: 0; }
-        .received { align-self: flex-start; background: var(--wa-bubble-in); border-top-left-radius: 0; }
-        .msg-time { font-size: 10px; color: rgba(255,255,255,0.5); text-align: right; margin-top: 4px; display: flex; justify-content: flex-end; gap: 3px; }
+        .header { background: var(--header-bg); padding: 40px 15px 10px 10px; display: flex; align-items: center; justify-content: space-between; }
+        .h-left { display: flex; align-items: center; gap: 10px; }
+        .avatar { width: 40px; height: 40px; border-radius: 50%; background: #333; object-fit: cover; }
+        .h-icons { display: flex; gap: 20px; color: var(--text-meta); font-size: 18px; }
 
-        /* BARRA INFERIOR COMPLETA */
-        .footer { padding: 8px 10px 12px 10px; display: flex; align-items: center; gap: 8px; }
-        .input-sim { background: var(--wa-header); flex: 1; border-radius: 22px; padding: 9px 15px; color: var(--wa-meta); display: flex; justify-content: space-between; align-items: center; font-size: 15px; }
-        .mic-btn { background: var(--wa-green); width: 42px; height: 42px; border-radius: 50%; display: flex; justify-content: center; align-items: center; color: white; font-size: 18px; }
+        .chat { flex: 1; padding: 10px 15px; overflow-y: auto; display: flex; flex-direction: column; }
+        .bubble { max-width: 85%; padding: 8px 12px; border-radius: 10px; margin-bottom: 5px; font-size: 15px; color: var(--text-main); line-height: 1.4; position: relative; }
+        .in { align-self: flex-start; background: var(--bubble-in); border-top-left-radius: 0; }
+        .out { align-self: flex-end; background: var(--bubble-out); border-top-right-radius: 0; }
+        .meta { font-size: 10px; color: rgba(255,255,255,0.5); text-align: right; margin-top: 4px; display: flex; justify-content: flex-end; gap: 3px; }
+
+        .footer { padding: 10px; display: flex; align-items: center; gap: 8px; background: transparent; }
+        .input-bar { background: var(--header-bg); flex: 1; border-radius: 25px; padding: 10px 15px; display: flex; justify-content: space-between; color: var(--text-meta); font-size: 16px; }
+        .mic { background: var(--wa-green); width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 20px; }
     </style>
 </head>
 <body>
-
-    <div id="controls">
-        <input type="text" id="nameIn" value="Nans" placeholder="Nombre">
-        <label style="font-size: 11px; color: #888;">Foto Perfil:</label>
-        <input type="file" id="photoIn" accept="image/*">
-        <input type="time" id="timeIn" value="22:30">
-        <textarea id="textIn" rows="5" placeholder="Pega los mensajes aquí..."></textarea>
-        <button class="btn-gen" onclick="generar()">GENERAR SIMULADOR</button>
+    <div id="panel">
+        <input type="text" id="n" placeholder="Nombre" value="Nans">
+        <input type="file" id="f" accept="image/*">
+        <textarea id="t" rows="5">Mensaje 1&#10;Mensaje 2&#10;Mensaje 3</textarea>
+        <button class="btn-gen" onclick="render()">GENERAR CAPTURA</button>
     </div>
 
-    <div id="simulator-frame">
-        <div class="phone-body">
-            <div class="header">
-                <div class="header-left">
-                    <span class="back-arrow">←</span>
-                    <img id="av-img" class="avatar" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=">
-                    <span id="name-disp" class="contact-name">Nombre</span>
-                </div>
-                <div class="header-icons">📹 📞 ⋮</div>
+    <div id="app">
+        <div class="header" onclick="regresar()">
+            <div class="h-left">
+                <span style="color:#8696a0; font-size:24px">←</span>
+                <img id="av" class="avatar" src="">
+                <b id="nd"></b>
             </div>
-            
-            <div class="chat-area" id="chat-box">
-                <div class="date-label">Hoy</div>
-            </div>
-
-            <div class="footer">
-                <div class="input-sim">
-                    <span>😊 Mensaje</span>
-                    <span style="font-size: 13px;">📎 📷</span>
-                </div>
-                <div class="mic-btn">🎤</div>
-            </div>
+            <div class="h-icons">📹 📞 ⋮</div>
+        </div>
+        <div class="chat" id="c"></div>
+        <div class="footer">
+            <div class="input-bar"><span>😊 Mensaje</span><span>📎 📷</span></div>
+            <div class="mic">🎤</div>
         </div>
     </div>
 
     <script>
-        function generar() {
-            const lines = document.getElementById('textIn').value.split('\n').filter(l => l.trim());
-            const photo = document.getElementById('photoIn').files[0];
-            let [h, m] = document.getElementById('timeIn').value.split(':').map(Number);
-
-            document.getElementById('name-disp').innerText = document.getElementById('nameIn').value;
+        function render() {
+            const photoInput = document.getElementById('f');
             
-            if(photo) {
+            // Usar FileReader para que la imagen persista
+            if (photoInput.files && photoInput.files[0]) {
                 const reader = new FileReader();
-                reader.onload = (e) => { document.getElementById('av-img').src = e.target.result; };
-                reader.readAsDataURL(photo);
+                reader.onload = function(e) {
+                    document.getElementById('av').src = e.target.result;
+                    completarRender();
+                }
+                reader.readAsDataURL(photoInput.files[0]);
+            } else {
+                completarRender();
             }
+        }
 
-            const chat = document.getElementById('chat-box');
-            chat.innerHTML = '<div class="date-label">Hoy</div>';
-
-            lines.forEach((t, i) => {
-                if(i > 0) m += Math.floor(Math.random() * 6) + 1;
-                if(m >= 60) { m -= 60; h = (h % 12) + 1; }
-                
-                const timeStr = `${h}:${m.toString().padStart(2, '0')}`;
-                const side = i % 2 === 0 ? 'sent' : 'received';
-                const checks = side === 'sent' ? '<span style="color:#53bdeb">✓✓</span>' : '';
-
-                chat.innerHTML += `
-                    <div class="msg ${side}">
-                        ${t}
-                        <div class="msg-time">${timeStr} ${checks}</div>
-                    </div>`;
+        function completarRender() {
+            document.getElementById('nd').innerText = document.getElementById('n').value;
+            const chat = document.getElementById('c');
+            chat.innerHTML = '<div style="align-self:center; background:#182229; color:#8696a0; font-size:11px; padding:5px 12px; border-radius:8px; margin:10px 0;">HOY</div>';
+            
+            const lines = document.getElementById('t').value.split('\n').filter(l => l.trim());
+            lines.forEach((txt, i) => {
+                const side = i % 2 === 0 ? 'out' : 'in';
+                const checks = side === 'out' ? '<span style="color:#53bdeb">✓✓</span>' : '';
+                chat.innerHTML += `<div class="bubble ${side}">${txt}<div class="meta">10:47 ${checks}</div></div>`;
             });
 
-            document.getElementById('simulator-frame').style.display = 'block';
+            document.getElementById('panel').style.display = 'none';
+            document.getElementById('app').style.display = 'flex';
+        }
+
+        function regresar() {
+            document.getElementById('panel').style.display = 'block';
+            document.getElementById('app').style.display = 'none';
         }
     </script>
 </body>
